@@ -36,7 +36,7 @@ jobs:
           echo "content=$CONTENT" >> $GITHUB_OUTPUT
 
       - name: Send email with report
-        uses: mattdavis0351/actions-send-email@v1
+        uses: mattdavis0351/actions-send-email@master
         with:
           server_address: smtp.qq.com
           server_port: 587
