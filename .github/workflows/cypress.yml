@@ -52,13 +52,10 @@ jobs:
           <p> See attached HTML report for full details.</p>
           EOF
 
-      - name: Read HTML body from file
-        id: read_body
-        shell: bash
+      - name: Load HTML email body into environment variable
         run: |
-          echo "body<<EOF" >> $GITHUB_OUTPUT
-          cat email-body.html >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          BODY_HTML=$(cat email-body.html | sed ':a;N;$!ba;s/\n/\\n/g')
+          echo "BODY_HTML=$BODY_HTML" >> $GITHUB_ENV
 
       - name: Send email with report
         uses: dawidd6/action-send-mail@v5
@@ -72,5 +69,5 @@ jobs:
           from: "Kong CI Bot <${{ secrets.EMAIL_USERNAME }}>"
           to: xuerenbo@qq.com
           html_body: true
-          body: "${{ steps.read_body.outputs.body }}"
+          body: ${{ env.BODY_HTML }}
           attachments: cypress/reports/mochawesome-report/report.html
