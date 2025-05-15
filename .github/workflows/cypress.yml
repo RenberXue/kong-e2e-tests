@@ -41,14 +41,17 @@ jobs:
           DURATION_MIN=$(awk "BEGIN {print int($DURATION_MS / 60000)}")
           DURATION_SEC=$(awk "BEGIN {print int(($DURATION_MS % 60000) / 1000)}")
           
-          SUMMARY="✅ Kong Gateway E2E tests completed
-    
-          - Total tests: $TESTS
-          - Passed: $PASSES
-          - Failed: $FAILURES
-          - Duration: ${DURATION_MIN} min ${DURATION_SEC} sec
+          SUMMARY=$(cat <<EOF
+        ✅ Kong Gateway E2E tests completed
 
-        📎 See attached HTML report for full details."
+      - Total tests: $TESTS
+      - Passed: $PASSES
+      - Failed: $FAILURES
+      - Duration: ${DURATION_MIN} min ${DURATION_SEC} sec
+
+        📎 See attached HTML report for full details.
+        EOF
+        )
     
         echo "body<<EOF" >> $GITHUB_OUTPUT
         echo "$SUMMARY" >> $GITHUB_OUTPUT
