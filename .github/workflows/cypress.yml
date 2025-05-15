@@ -35,12 +35,6 @@ jobs:
           CONTENT=$(base64 -w 0 cypress/reports/mochawesome-report/report.html)
           echo "content=$CONTENT" >> $GITHUB_OUTPUT
 
-      - name: Upload HTML report artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: mochawesome-report
-          path: cypress/reports/mochawesome-report/report.html
-
       - name: Send email with report
         uses: mattdavis0351/actions-send-email@v1
         with:
