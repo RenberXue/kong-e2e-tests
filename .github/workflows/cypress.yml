@@ -41,18 +41,16 @@ jobs:
           DURATION_MIN=$(awk "BEGIN {print int($DURATION_MS / 60000)}")
           DURATION_SEC=$(awk "BEGIN {print int(($DURATION_MS % 60000) / 1000)}")
           
-          cat <<EOF >> $GITHUB_OUTPUT
-          body<<EOF
-          <h2>Cypress E2E Test Completed</h2>
-          <ul>
-           <li>Total tests: ${TESTS}</li>
-           <li>Passed: ${PASSES}</li>
-           <li>Failed: ${FAILURES}</li>
-           <li>Duration: ${DURATION_MIN} min ${DURATION_SEC} sec</li>
-          </ul>
-          <p>Please check the attached HTML report for full details.</p>
-          EOF
-          EOF
+          {
+            echo "body<<EOM"
+            printf "Kong Gateway E2E tests completed\n\n"
+            printf "Total tests : %s\n" "$TESTS"
+            printf "Passed      : %s\n" "$PASSES"
+            printf "Failed      : %s\n" "$FAILURES"
+            printf "Duration    : %s min %s sec\n" "$DURATION_MIN" "$DURATION_SEC"
+            printf "\nSee attached HTML report for full details.\n"
+            echo "EOM"
+          } >> $GITHUB_OUTPUT
 
       - name: Send email with report
         uses: dawidd6/action-send-mail@v5
