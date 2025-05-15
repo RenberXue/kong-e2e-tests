@@ -29,25 +29,46 @@ jobs:
           npx mochawesome-merge cypress/reports/mocha*.json > cypress/reports/output.json
           npx marge cypress/reports/output.json -f report -o cypress/reports/mochawesome-report
 
-      - name: Read report HTML into email body
-        id: read_report
+      - name: Parse test summary and set as email body
+        id: summary
         shell: bash
         run: |
-          echo "body<<REPORT_BODY_END" >> $GITHUB_OUTPUT
-          cat cypress/reports/mochawesome-report/report.html >> $GITHUB_OUTPUT
-          echo "" >> $GITHUB_OUTPUT
-          echo "REPORT_BODY_END" >> $GITHUB_OUTPUT
+          STATS=$(jq '.stats' cypress/reports/output.json)
+          TESTS=$(echo "$STATS" | jq '.tests')
+          PASSES=$(echo "$STATS" | jq '.passes')
+          FAILURES=$(echo "$STATS" | jq '.failures')
+          DURATION_MS=$(echo "$STATS" | jq '.duration')
+          DURATION_MIN=$(awk "BEGIN {print int($DURATION_MS / 60000)}")
+          DURATION_SEC=$(awk "BEGIN {print int(($DURATION_MS % 60000) / 1000)}")
+
+          SUMMARY="✅ Kong Gateway E2E tests completed
+
+  - Total tests: $TESTS
+  - Passed: $PASSES
+  - Failed: $FAILURES
+  - Duration: ${DURATION_MIN} min ${DURATION_SEC} sec
+
+  📎 See attached HTML report for full details."
+  
+  echo "body<<EOF" >> $GITHUB_OUTPUT
+  echo "$SUMMARY" >> $GITHUB_OUTPUT
+  echo "EOF" >> $GITHUB_OUTPUT
+  
+  echo "body<<EOF" >> $GITHUB_OUTPUT
+  echo "$SUMMARY" >> $GITHUB_OUTPUT
+  echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Send email with report
         uses: dawidd6/action-send-mail@v5
         with:
           server_address: smtp.qq.com
           server_port: 465
+          secure: true
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: "🚀 Kong Gateway E2E Tests Report - ${{ github.repository }}"
           from: "Kong CI Bot <${{ secrets.EMAIL_USERNAME }}>"
           to: xuerenbo@qq.com
-          html_body: true
-          body: ${{ steps.read_report.outputs.body }}
+          html_body: false
+          body: ${{ steps.summary.outputs.body }}
           attachments: cypress/reports/mochawesome-report/report.html
