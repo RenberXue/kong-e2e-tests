@@ -32,19 +32,21 @@ jobs:
       - name: Read report HTML into email body
         id: read_report
         run: |
-          CONTENT=$(base64 -w 0 cypress/reports/mochawesome-report/report.html)
-          echo "content=$CONTENT" >> $GITHUB_OUTPUT
+          REPORT_HTML=$(cat cypress/reports/mochawesome-report/report.html)
+          echo "body<<EOF" >> $GITHUB_OUTPUT
+          echo "$REPORT_HTML" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Send email with report
-        uses: mattdavis0351/actions-send-email@master
+        uses: dawidd6/action-send-mail@v5
         with:
           server_address: smtp.qq.com
-          server_port: 587
+          server_port: 465
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: "🚀 Kong Gateway E2E Tests Report - ${{ github.repository }}"
-          from: "Kong CI Bot <${{ secrets.EMAIL_USERNAME }}}>"
+          from: "Kong CI Bot <${{ secrets.EMAIL_USERNAME }}>"
           to: xuerenbo@qq.com
           html_body: true
-          body: ${{ steps.read_report.outputs.content }}
+          body: ${{ steps.read_report.outputs.body }}
           attachments: cypress/reports/mochawesome-report/report.html
