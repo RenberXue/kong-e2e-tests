@@ -32,7 +32,7 @@ export default defineConfig({
       on('before:run', async () => {
         console.log('Starting Kong Gateway with docker-compose...');
         try {
-          execSync('cd docker && docker-compose up -d', {stdio: 'inherit'});
+          execSync('cd docker && docker compose up -d', {stdio: 'inherit'});
           await waitOn({
             resources: ['http://localhost:8002'],
             timeout: 30000,
@@ -47,7 +47,7 @@ export default defineConfig({
       on('after:run', () => {
         console.log('Shutting down Kong Gateway with docker-compose...');
         try {
-          execSync('cd docker && docker-compose down', {stdio: 'inherit'});
+          execSync('cd docker && docker compose down', {stdio: 'inherit'});
         } catch (error) {
           console.error('Failed to stop Docker containers:', error);
         }
