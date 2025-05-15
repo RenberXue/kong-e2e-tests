@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npx cypress run",
     "debug": "npx cypress run --spec 'cypress/e2e/Workspaces/GatewayServices/gatewayServices.cy.ts'",
-    "report": "npx mochawesome-merge cypress/reports/mocha*.json > cypress/reports/output.json && npx marge cypress/reports/output.json -f report -o cypress/reports/mochawesome-report"
+    "report": "npx mochawesome-merge cypress/reports/mocha*.json > cypress/reports/output.json && npx marge cypress/reports/output.json -f report -o cypress/reports/mochawesome-report --inline"
   },
   "keywords": [],
   "author": "Renber Xue",

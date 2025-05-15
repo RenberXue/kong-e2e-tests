@@ -27,7 +27,7 @@ jobs:
       - name: Merge mochawesome JSON files
         run: |
           npx mochawesome-merge cypress/reports/mocha*.json > cypress/reports/output.json
-          npx marge cypress/reports/output.json -f report -o cypress/reports/mochawesome-report
+          npx marge cypress/reports/output.json -f report -o cypress/reports/mochawesome-report --inline
 
       - name: Parse test summary and set as email body
         id: summary
@@ -52,11 +52,6 @@ jobs:
           <p> See attached HTML report for full details.</p>
           EOF
 
-      - name: Load HTML email body into environment variable
-        run: |
-          BODY_HTML=$(cat email-body.html | sed ':a;N;$!ba;s/\n/\\n/g')
-          echo "BODY_HTML=$BODY_HTML" >> $GITHUB_ENV
-
       - name: Send email with report
         uses: dawidd6/action-send-mail@v5
         with:
@@ -69,5 +64,5 @@ jobs:
           from: "Kong CI Bot <${{ secrets.EMAIL_USERNAME }}>"
           to: xuerenbo@qq.com
           html_body: true
-          body: ${{ env.BODY_HTML }}
+          body: email-body.html
           attachments: cypress/reports/mochawesome-report/report.html
