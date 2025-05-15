@@ -1,0 +1,54 @@
+name: Cypress E2E Tests
+
+on:
+  push:
+    branches: [main]
+      
+jobs:
+  cypress-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Cypress Tests
+        run: npx cypress run
+
+      - name: Merge mochawesome reports
+        run: |
+          npx mochawesome-merge cypress/reports/mocha*.json > cypress/reports/output.json
+          npx marge cypress/reports/output.json -f report -o cypress/reports/mochawesome-report
+
+      - name: Upload HTML report artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: mochawesome-report
+          path: cypress/reports/mochawesome-report/report.html
+
+      - name: Send email with report (optional)
+          uses: mattdavis0351/actions-send-email@v1
+          with:
+            server_address: smtp.example.com
+            server_port: 587
+            username: ${{ secrets.EMAIL_USERNAME }}
+            password: ${{ secrets.EMAIL_PASSWORD }}
+            subject: "🚀 Cypress Test Report"
+            to: xuerenbo@qq.com
+            from: "Cypress Bot <noreply@example.com>"
+            body: |
+              Hi,
+              
+              Please find the attached Cypress test report.
+              
+              Regards,
+              Your friendly CI bot
+            attachments: mochawesome-report/report.html

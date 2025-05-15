@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "types": ["cypress", "node", "wait-on"],
+    "esModuleInterop": true,
+    "strict": true,
+    "lib": ["dom", "es6"],
+    "outDir": "./dist",
+    "rootDir": "./",
+    "baseUrl": ".",
+    "paths": {
+      "@support/*": ["cypress/support/*"],
+      "@e2e/*": ["cypress/e2e/*"],
+      "@fixtures/*": ["cypress/fixtures/*"]
+    }
+  },
+  "include": ["cypress/**/*", "**/*.ts"],
+  "exclude": ["node_modules"]
+}
