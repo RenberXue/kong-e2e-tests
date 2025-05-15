@@ -64,5 +64,4 @@ jobs:
           from: "Kong CI Bot <${{ secrets.EMAIL_USERNAME }}>"
           to: xuerenbo@qq.com
           html_body: file://email-body.html
-          body: "test email"
           attachments: cypress/reports/mochawesome-report/report.html
