@@ -40,23 +40,19 @@ jobs:
           DURATION_MS=$(echo "$STATS" | jq '.duration')
           DURATION_MIN=$(awk "BEGIN {print int($DURATION_MS / 60000)}")
           DURATION_SEC=$(awk "BEGIN {print int(($DURATION_MS % 60000) / 1000)}")
-
+          
           SUMMARY="✅ Kong Gateway E2E tests completed
+    
+          - Total tests: $TESTS
+          - Passed: $PASSES
+          - Failed: $FAILURES
+          - Duration: ${DURATION_MIN} min ${DURATION_SEC} sec
 
-  - Total tests: $TESTS
-  - Passed: $PASSES
-  - Failed: $FAILURES
-  - Duration: ${DURATION_MIN} min ${DURATION_SEC} sec
-
-  📎 See attached HTML report for full details."
-  
-  echo "body<<EOF" >> $GITHUB_OUTPUT
-  echo "$SUMMARY" >> $GITHUB_OUTPUT
-  echo "EOF" >> $GITHUB_OUTPUT
-  
-  echo "body<<EOF" >> $GITHUB_OUTPUT
-  echo "$SUMMARY" >> $GITHUB_OUTPUT
-  echo "EOF" >> $GITHUB_OUTPUT
+        📎 See attached HTML report for full details."
+    
+        echo "body<<EOF" >> $GITHUB_OUTPUT
+        echo "$SUMMARY" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Send email with report
         uses: dawidd6/action-send-mail@v5
