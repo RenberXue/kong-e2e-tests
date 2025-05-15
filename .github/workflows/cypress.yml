@@ -63,6 +63,5 @@ jobs:
           subject: "🚀 Kong Gateway E2E Tests Report - ${{ github.repository }}"
           from: "Kong CI Bot <${{ secrets.EMAIL_USERNAME }}>"
           to: xuerenbo@qq.com
-          html_body: true
-          body: email-body.html
+          html_body: file://cypress/reports/mochawesome-report.html
           attachments: cypress/reports/mochawesome-report/report.html
