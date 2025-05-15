@@ -43,12 +43,14 @@ jobs:
           
           {
             echo "body<<EOM"
-            printf "Kong Gateway E2E tests completed\n\n"
-            printf "Total tests : %s\n" "$TESTS"
-            printf "Passed      : %s\n" "$PASSES"
-            printf "Failed      : %s\n" "$FAILURES"
-            printf "Duration    : %s min %s sec\n" "$DURATION_MIN" "$DURATION_SEC"
-            printf "\nSee attached HTML report for full details.\n"
+            echo "<p>Kong Gateway E2E tests completed</p>"
+            echo "<ul>"
+            echo "<li>Total tests: $TESTS</li>"
+            echo "<li>Passed: $PASSES</li>"
+            echo "<li>Failed: $FAILURES</li>"
+            echo "<li>Duration: $DURATION_MIN min $DURATION_SEC sec</li>"
+            echo "</ul>"
+            echo "<p>See attached HTML report for full details.</p>"
             echo "EOM"
           } >> $GITHUB_OUTPUT
 
@@ -63,6 +65,6 @@ jobs:
           subject: "🚀 Kong Gateway E2E Tests Report - ${{ github.repository }}"
           from: "Kong CI Bot <${{ secrets.EMAIL_USERNAME }}>"
           to: xuerenbo@qq.com
-          html_body: false
+          html_body: true
           body: ${{ steps.summary.outputs.body }}
           attachments: cypress/reports/mochawesome-report/report.html
