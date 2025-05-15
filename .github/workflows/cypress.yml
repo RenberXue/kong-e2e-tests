@@ -54,6 +54,9 @@ jobs:
             echo "EOM"
           } >> $GITHUB_OUTPUT
 
+      - name: Debug email body
+        run: echo "${{ steps.summary.outputs.body }}"
+
       - name: Send email with report
         uses: dawidd6/action-send-mail@v5
         with:
@@ -66,5 +69,5 @@ jobs:
           from: "Kong CI Bot <${{ secrets.EMAIL_USERNAME }}>"
           to: xuerenbo@qq.com
           html_body: "true"
-          body: ${{ steps.summary.outputs.body }}
+          body: "${{ steps.summary.outputs.body }}"
           attachments: cypress/reports/mochawesome-report/report.html
