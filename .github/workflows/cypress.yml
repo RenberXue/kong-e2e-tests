@@ -32,10 +32,11 @@ jobs:
       - name: Read report HTML into email body
         id: read_report
         run: |
-          REPORT_HTML=$(cat cypress/reports/mochawesome-report/report.html)
-          echo "body<<EOF" >> $GITHUB_OUTPUT
-          echo "$REPORT_HTML" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          {
+            echo "body<<EOF"
+            cat cypress/reports/mochawesome-report/report.html
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
 
       - name: Send email with report
         uses: dawidd6/action-send-mail@v5
