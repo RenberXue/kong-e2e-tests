@@ -33,9 +33,10 @@ jobs:
         id: read_report
         shell: bash
         run: |
-          echo "body<<EOF" >> $GITHUB_OUTPUT
+          echo "body<<REPORT_BODY_END" >> $GITHUB_OUTPUT
           cat cypress/reports/mochawesome-report/report.html >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          echo "" >> $GITHUB_OUTPUT
+          echo "REPORT_BODY_END" >> $GITHUB_OUTPUT
 
       - name: Send email with report
         uses: dawidd6/action-send-mail@v5
